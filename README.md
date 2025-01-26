@@ -20,15 +20,10 @@ Technologies/Components Used
 
 For Software:
 
-    [Languages used]
-    [Frameworks used]
-    [Libraries used]
-    [Tools used]
+    html,css
+    CodePen
 
-For Hardware:
 
-    [List main components]
-    [List specifications]
     [List tools required]
 
 Implementation
