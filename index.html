@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bus List</h1>
+       
+        <div class="location-selector">
+            <select id="origin" required>
+                <option value="">Select Origin</option>
+                <option value="kottayam">KOTTAYAM</option>
+                <option value="changanassery">CHANGANASSERY</option>
+                <option value="pala">PALA</option>
+            </select>
+           
+            <select id="destination" required>
+                <option value="">Select Destination</option>
+                <option value="manarcadu">MANARCADU</option>
+                <option value="pala">PALA</option>
+                <option value="kottayam">KOTTAYAM</option>
+                <option value="changanassery">CHANGANASSERY</option>
+                <option value="chingavanam">CHINGAVANAM</option>
+                <option value="kumarakom">KUMARAKOM</option>
+            </select>
+        </div>
+       
+        <div class="bus-list" id="busList">
+            <p>Select your origin and destination to view available buses.</p>
+        </div>
+
+        <!-- Complaint Box Section -->
+        <div class="complaint-box">
+            <h2>Submit Your Complaint</h2>
+            <form id="complaintForm">
+                <textarea id="complaintText" placeholder="Write your complaint here..." required rows="5" cols="50"></textarea><br>
+                <button type="submit">Submit Complaint</button>
+            </form>
+            <p id="complaintResponse" style="color: green; display: none;">Thank you for your feedback! We will look into it.</p>
+        </div>
+    </div>
+
+    <script>
+        const busRoutes = {
+            'kottayam_manarcadu': [
+                {name: 'ST MARY', departure: '08:15am', arrival: '08:45am'},
+                {name: 'BENNY', departure:'09:00am', arrival: '09:40am'},
+                {name: 'Alphonsa', departure:'01:00pm', arrival: '01:30pm'},
+                {name: 'ST MARY', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:00pm'},
+                {name: 'RISING SUN', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'THANDAPRA', departure:'04:45pm', arrival: '05:15pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure:'08:00pm', arrival: '08:30pm'}
+             ],
+             'kottayam_pala': [
+                {name: 'ST MARY', departure: '08:15am', arrival: '09:00am'},
+                {name: 'BENNY', departure:'09:00am', arrival: '09:40am'},
+                {name: 'RISING SUN', departure: '10:00am', arrival: '10:40am'},
+                {name: 'THANDAPRA', departure:'10:45am', arrival: '11:25am'},
+                {name: 'ST Anns' , departure: '11:30am', arrival: '12:15pm'},
+                {name: 'Alphonsa', departure:'01:00pm', arrival: '01:40pm'},
+                {name: 'ST MARY', departure: '01:45pm', arrival: '02:20pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:10pm'},
+                {name: 'RISING SUN', departure: '03:30pm', arrival: '04:15pm'},
+                {name: 'THANDAPRA', departure:'04:45pm', arrival: '05:30pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:45pm'},
+                {name: 'BENNY', departure:'07:00pm', arrival: '07:45pm'}
+            ],
+                'kottayam_changanassery': [
+                {name: 'ST MARY', departure: '08:15am', arrival: '08:45am'},
+                {name: 'BENNY', departure:'09:00am', arrival: '09:40am'},
+                {name: 'RISING SUN', departure: '10:00am', arrival: '10:20am'},
+                {name: 'THANDAPRA', departure:'10:45am', arrival: '11:15am'},
+                {name: 'MARCO' , departure: '12:00pm', arrival: '12:15pm'},
+                {name: 'Alphonsa', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:00pm'},
+                {name: 'RISING SUN', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'THANDAPRA', departure:'04:45pm', arrival: '05:15pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure:'08:00pm', arrival: '08:30pm'}
+            ],
+            'kottayam_chingavanam': [
+                {name: 'HAMDAN', departure: '08:15am', arrival: '08:45am'},
+                {name: 'MARCO', departure: '09:00am', arrival: '09:40am'},
+                {name: 'JOHN', departure: '10:00am', arrival: '10:20am'},
+                {name: 'SANJOS', departure: '10:45am', arrival: '11:15am'},
+                {name: 'BESTIN', departure: '12:00pm', arrival: '12:15pm'},
+                {name: 'QUEENS', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'TCM', departure: '02:30pm', arrival: '03:00pm'},
+                {name: 'ST THOMAS', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'ST JOHNS', departure: '04:45pm', arrival: '05:15pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure: '08:00pm', arrival: '08:30pm'}
+            ],
+            'kottayam_kumarakom': [
+                {name: 'KALATHIL', departure: '08:15am', arrival: '08:45am'},
+                {name: 'JINA', departure:'09:00am', arrival: '09:40am'},
+                {name: 'BROTHERS', departure: '10:00am', arrival: '10:20am'},
+                {name: 'THANDAPRA', departure:'10:45am', arrival: '11:15am'},
+                {name: 'MARCO' , departure: '12:00pm', arrival: '12:15pm'},
+                {name: 'Alphonsa', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:00pm'},
+                {name: 'RISING SUN', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'THANDAPRA', departure:'04:45pm', arrival: '05:15pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure:'08:00pm', arrival: '08:30pm'}
+            ],
+            'changanassery_manarcadu': [
+                {name: 'BENNY', departure:'09:00am', arrival: '09:40am'},
+                {name: 'BROTHERS', departure: '10:00am', arrival: '10:20am'},
+                {name: 'THANDAPRA', departure:'10:45am', arrival: '11:15am'},
+                {name: 'KOODATHIL', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:00pm'},
+                {name: 'RISING SUN', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'JESUS', departure:'04:45pm', arrival: '05:15pm'},
+                {name: 'BENNY', departure: '06:00pm', arrival: '06:30pm'}
+            ],
+            'changanassery_chingavanam': [
+                {name: 'ST THOMAS', departure: '08:15am', arrival: '08:45am'},
+                {name: 'JINA', departure:'09:00am', arrival: '09:40am'},
+                {name: 'BESTIN', departure: '10:00am', arrival: '10:20am'},
+                {name: 'THANDAPRA', departure:'10:45am', arrival: '11:15am'},
+                {name: 'MARIA', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:00pm'},
+                {name: 'RISING SUN', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'THANDAPRA', departure:'04:45pm', arrival: '05:15pm'},
+                {name: 'TMC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure:'08:00pm', arrival: '08:30pm'}
+            ],
+            'changanassery_kottayam': [
+                {name: 'HAMDAN', departure: '08:15am', arrival: '08:45am'},
+                {name: 'MARCO', departure: '09:00am', arrival: '09:40am'},
+                {name: 'JOHN', departure: '10:00am', arrival: '10:20am'},
+                {name: 'SANJOS', departure: '10:45am', arrival: '11:15am'},
+                {name: 'BESTIN', departure: '12:00pm', arrival: '12:15pm'},
+                {name: 'QUEENS', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'TCM', departure: '02:30pm', arrival: '03:00pm'},
+                {name: 'ST THOMAS', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'ST JOHNS', departure: '04:45pm', arrival: '05:15pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure: '08:00pm', arrival: '08:30pm'}
+            ],
+                'pala_kottayam': [
+                {name: 'KALATHIL', departure: '08:15am', arrival: '08:45am'},
+                {name: 'JINA', departure:'09:00am', arrival: '09:40am'},
+                {name: 'BROTHERS', departure: '10:00am', arrival: '10:20am'},
+                {name: 'THANDAPRA', departure:'10:45am', arrival: '11:15am'},
+                {name: 'MARCO' , departure: '12:00pm', arrival: '12:15pm'},
+                {name: 'Alphonsa', departure: '01:45pm', arrival: '02:10pm'},
+                {name: 'QUEENS', departure:'02:30pm', arrival: '03:00pm'},
+                {name: 'RISING SUN', departure: '04:00pm', arrival: '04:15pm'},
+                {name: 'THANDAPRA', departure:'04:45pm', arrival: '05:15pm'},
+                {name: 'YATHRIC', departure: '06:00pm', arrival: '06:30pm'},
+                {name: 'BENNY', departure:'08:00pm', arrival: '08:30pm'} 
+             ]
+        };
+
+        // Price list for each route
+        const busPrices = {
+            'kottayam_manarcadu': 15,
+            'kottayam_pala': 26,
+            'kottayam_changanassery': 26,
+            'kottayam_chingavanam': 13,
+            'kottayam_kumarakom': 26,
+            'changanassery_manarcadu': 32,
+            'changanassery_chingavanam': 13,
+            'changanassery_kottayam': 26,
+            'pala_kottayam': 33,
+            
+        };
+
+        const originSelect = document.getElementById('origin');
+        const destinationSelect = document.getElementById('destination');
+        const busList = document.getElementById('busList');
+        const complaintForm = document.getElementById('complaintForm');
+        const complaintText = document.getElementById('complaintText');
+        const complaintResponse = document.getElementById('complaintResponse');
+
+        function updateBusList() {
+            const origin = originSelect.value;
+            const destination = destinationSelect.value;
+
+            if (!origin || !destination) {
+                busList.innerHTML = '<p>Select your origin and destination to view available buses.</p>';
+                return;
+            }
+
+            const routeKey = `${origin}_${destination}`;
+            const routes = busRoutes[routeKey] || [];
+            const ticketPrice = busPrices[routeKey] || 'N/A';  // Fetch ticket price for the route
+
+            if (routes.length === 0) {
+                busList.innerHTML = '<p>No buses found for selected route.</p>';
+                return;
+            }
+
+            busList.innerHTML = `
+                <p>Ticket Price: ₹${ticketPrice}</p>
+                ${routes.map(bus => `
+                    <div class="bus-item">
+                        <div class="bus-details">
+                            <span class="bus-name">${bus.name}</span>
+                            <span class="departure-time">Departure: ${bus.departure} | Arrival: ${bus.arrival}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        originSelect.addEventListener('change', updateBusList);
+        destinationSelect.addEventListener('change', updateBusList);
+
+        complaintForm.addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent page reload on form submit
+
+            // Simulate sending complaint (you can replace this with actual form submission logic)
+            complaintResponse.style.display = 'block';
+            complaintText.value = '';  // Clear the complaint textarea after submission
+        });
+    </script>
+</body>
+</html>
